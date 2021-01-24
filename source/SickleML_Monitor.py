@@ -14,17 +14,20 @@ import random
 import time
 import tensorflow.keras
 from tensorflow.keras.models import load_model
-
+import tensorflow as tf
 
 
 class CountAdheredBloodCells:
 
-    alpha,beta = 35, 100 # class variables (amount of channel paritions
     
     # instance class
     def __init__(self, path, channel_filename):
         self.channel_image = cv.imread(path + channel_filename)
 
+        self.alpha, self.beta = 35, 100 # class variables (amount of channel partitions
+        self.tile_width = int(self.channel_image.shape[1]/self.beta)
+        self.tile_height = int(self.channel_image.shape[0]/self.alpha)
+        
 
     # crop individual tile images
     def process_tiles(self, kk=0):
@@ -32,14 +35,14 @@ class CountAdheredBloodCells:
         X = np.zeros((self.alpha*self.beta, 128, 128, 3))
         for ii in range(self.alpha):
             for jj in range(self.beta):
-                y_slider, x_slider = ii*150, jj*150
-                image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
+                y_slider, x_slider = ii*self.tile_height, jj*self.tile_width
+                image = self.channel_image[0+y_slider:self.tile_height+y_slider, 0+x_slider:self.tile_width+x_slider,:]
                 X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                 kk+=1
-        print("Total of number of extract tiles: ", len(X[:,0,0,0]))
+        print("Total number of extracted tiles: ", len(X[:,0,0,0]))
         return X
 
-    # zero-center normalization for both Phase I and II 
+    # zero-center normalization for both Phase I and II s
     def standard_norm(self, tile, phase):
         norm_tile = (tile - np.mean(tile))/(np.std(tile))
         if phase == 1:
@@ -48,13 +51,14 @@ class CountAdheredBloodCells:
             norm_tile = norm_tile.reshape(1,224,224,3)
         
         return norm_tile
-
+    
     # output segmentation masks (one hot encoded probability tensors)
+    @tf.function
     def Phase1_prediction(self, ensemble, tile):
         sample, height, width, depth = tile.shape
         empty_mask = np.zeros((sample, height, width, depth))
         for kfold, model in enumerate(ensemble):
-            empty_mask += model.predict(tile)
+            empty_mask += model(tile)
         empty_mask *= 1/len(ensemble)
         return empty_mask
         
@@ -89,7 +93,7 @@ class CountAdheredBloodCells:
     
     # generate binary masks with the foreground as the adhered BC label
     def binarize_cells(self, channel_mask):
-        mask_cells = channel_mask == 2
+        mask_cells = channel_mask == 1
         mask_cells = mask_cells*1
         return mask_cells
     
@@ -115,7 +119,7 @@ class CountAdheredBloodCells:
 
     def ext_IndividualCells(self, channel_mask, padding = 20, crop_size = 32, count = 0):        
         img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
-        binary_mask = (channel_mask == 2)*1
+        binary_mask = (channel_mask == 1)*1
         blobLabels = measure.label(binary_mask)
         labelProperties = measure.regionprops(blobLabels)
         centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
@@ -146,14 +150,26 @@ class CountAdheredBloodCells:
 
 #    Class methods for implementing Phase 2 is found below ...
 
+    @tf.function
+    def predict_class(self, ensemble, tile):
+        y_pred = np.zeros((3,))
+        for kfold, model in enumerate(ensemble):
+            y_pred += model(tile)
+        y_pred *= 1/len(ensemble)
+        return y_pred
+
+
     # predict one hot encoded probability vectors in Phase II
     def Phase2_prediction(self, ensemble, tiles):
         samples, height, width, depth = tiles.shape
         y_preds = np.zeros((samples, 3))
         for sample in range(samples):
-            for kfold, model in enumerate(ensemble): 
-                y_preds[sample,:] += model.predict(tiles[sample,:,:,:].reshape(1,height,width,depth)).reshape(3,)
-            y_preds[sample,:] *= 1/len(ensemble)
+            y_preds[sample,:] = self.predict_class(ensemble, tiles[sample,:,:].reshape(1,height,width,depth))
+
+
+        #    for kfold, model in enumerate(ensemble): 
+       #         y_preds[sample,:] += model.predict(tiles[sample,:,:,:].reshape(1,height,width,depth)).reshape(3,)
+        #    y_preds[sample,:] *= 1/len(ensemble)
        
         return y_preds
     
