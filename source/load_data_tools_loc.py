@@ -68,7 +68,6 @@ def resnet50_gdrive_(Phase_num = '2'):
                     "1x2Mg_54XcRfFOsCHL3-B7mOCOvoYzuYA"]
     resnet50_output_names = model_output_names(Phase_num = '2')
     
-    print("Start downloading resnet50 net models...")
     for ID, output_name in zip(resnet50_IDs, resnet50_output_names):
         download_file_from_google_drive(ID, output_name)
     
@@ -89,8 +88,7 @@ def ce_jaccard_gdrive_(Phase_num = '1'):
                       "1RuJtOQasUPzvM_8wytNebbWb6XeqHv6Z"]
     
     ce_jaccard_output_names =  model_output_names(Phase_num = '1') 
-    print("Start downloading encoder-decoder Ce-Jaccard net models...")
     for ID, output_name in zip(ce_jaccard_Ids, ce_jaccard_output_names):
-        gdown.download(url+ID, f"./{output_name}", quiet = False)
+        gdown.download(url+ID, f"./{output_name}", quiet = True)
     
     return
