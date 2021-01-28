@@ -178,19 +178,15 @@ class CountAdheredBloodCells:
         sRBC = 0
         WBC = 0
         other = 0
-        sRBC_container, WBC_container, Other_container = [],[],[]
         for sample in range(len(predictions)):
             if predictions[sample][0] >= rbc_thres[0]:
                 sRBC+=1
-                sRBC_container.append(sample)
             if predictions[sample][1] >= wbc_thres[0]:
                 WBC+=1
-                WBC_container.append(sample)
             if predictions[sample][2] >= other_thres[0]:
                 other+=1
-                Other_container.append(sample)
     
-        return sRBC,WBC,other, sRBC_container, WBC_container, Other_container    
+        return sRBC,WBC,other   
 
     # function that encompasses all the neccesary functions to complete Phase II 
     def count_predictions(self, ensemble, img_container, rbc_thres, wbc_thres, other_thres, phase=2):
@@ -200,8 +196,8 @@ class CountAdheredBloodCells:
             X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
             norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
         y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
-        sRBC,WBC,Other, sRBC_container, WBC_container, Other_container = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
-        return sRBC, WBC, Other, sRBC_container, WBC_container, Other_container
+        sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
+        return sRBC, WBC, Other
 
 #    Call the pipeline for cell counting ...
 
@@ -225,9 +221,9 @@ class CountAdheredBloodCells:
         print('Complete ...')
         # Implement Phase II ...
         print('Implementing Phase II ...')
-        sRBC, WBC, Other, sRBC_container, WBC_container, Other_container = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
+        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
-        return sRBC, WBC, Other, img_container, sRBC_container, WBC_container, Other_container
+        return sRBC, WBC, Other
     
 
         return
