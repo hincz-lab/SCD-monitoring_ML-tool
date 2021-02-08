@@ -189,18 +189,28 @@ class CountAdheredBloodCells:
 
     # function that encompasses all the neccesary functions to complete Phase II 
     def count_predictions(self, ensemble, img_container, rbc_thres, wbc_thres, other_thres, phase=2):
-        print("Counting Predictions")
-        X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
-        print("Next Creating Norm")
-        norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
-        print("Resizing")
+        #print("Counting Predictions")
+        #X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
+        #print("Next Creating Norm")
+        #norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
+        #print("Resizing")
+        sRBCFinal = 0
+        WBCFinal = 0
+        OtherFinal = 0
         for sample, image in enumerate(img_container):
-            X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
-            norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
+            #X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
+            #norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
+            X_Phase2 = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
+            norm_X_Phase2 = self.standard_norm(X_Phase2, phase)
+            y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
+            sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
+            sRBCFinal = sRBC + sRBCFinal
+            WBCFinal = WBC + WBCFinal
+            WBCFinal = sRBC + OtherFinal
         print("Done")
-        y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
-        sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
-        return sRBC, WBC, Other
+        #y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
+        #sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
+        return sRBCFinal, WBCFinal, OtherFinal
 
 #    Call the pipeline for cell counting ...
 
