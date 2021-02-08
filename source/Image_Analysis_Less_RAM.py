@@ -189,6 +189,7 @@ class CountAdheredBloodCells:
 
     # function that encompasses all the neccesary functions to complete Phase II 
     def count_predictions(self, ensemble, img_container, rbc_thres, wbc_thres, other_thres, phase=2):
+        print("Counting Predictions")
         X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
         norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
         print("Resizing")
@@ -222,10 +223,10 @@ class CountAdheredBloodCells:
     
     def call_phase_two(self, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, channel_mask):
         print('Prepare Phase II data ...')
-        img_container = self.ext_IndividualCells(channel_mask)
+        #img_container = self.ext_IndividualCells(channel_mask)
         print('Complete ...')
         print('Implementing Phase II ...')    
-        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
+        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, self.ext_IndividualCells(channel_mask), rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
         return sRBC, WBC, Other
     
