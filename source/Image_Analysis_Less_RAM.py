@@ -191,9 +191,12 @@ class CountAdheredBloodCells:
     def count_predictions(self, ensemble, img_container, rbc_thres, wbc_thres, other_thres, phase=2):
         X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
         norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
+        print("Resizing")
         for sample, image in enumerate(img_container):
+            print(sample)
             X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
             norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
+        print("Done")
         y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
         sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
         return sRBC, WBC, Other
@@ -221,8 +224,8 @@ class CountAdheredBloodCells:
         print('Prepare Phase II data ...')
         img_container = self.ext_IndividualCells(channel_mask)
         print('Complete ...')
-        #print('Implementing Phase II ...')    
-        #sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
+        print('Implementing Phase II ...')    
+        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
         return sRBC, WBC, Other
     
