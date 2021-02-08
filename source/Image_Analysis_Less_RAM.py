@@ -225,5 +225,7 @@ class CountAdheredBloodCells:
         sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
 
+        return sRBC, WBC, Other
+    
         return
 
