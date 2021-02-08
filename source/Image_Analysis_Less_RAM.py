@@ -220,9 +220,9 @@ class CountAdheredBloodCells:
         print('Complete ...')
         return img_container
     
-    def call_phase_two(self, Phase2_ensemble,rbc_thres, wbc_thres, other_thres):
+    def call_phase_two(self, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, img_container):
         print('Implementing Phase II ...')    
-        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres, img_container)
+        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
 
         return sRBC, WBC, Other
