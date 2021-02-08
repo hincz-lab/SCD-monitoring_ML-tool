@@ -194,7 +194,6 @@ class CountAdheredBloodCells:
         norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
         print("Resizing")
         for sample, image in enumerate(img_container):
-            print(sample)
             X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
             norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
         print("Done")
