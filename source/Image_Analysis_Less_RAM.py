@@ -215,7 +215,7 @@ class CountAdheredBloodCells:
         channel_mask = self.preprocess_channel_mask(norm_X, Phase1_ensemble, kk=0)
         print('Complete ...')
         # Preprare the Phase II data ...
-        return mask
+        return channel_mask
     
     def call_phase_two(self, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, channel_mask):
         print('Prepare Phase II data ...')
