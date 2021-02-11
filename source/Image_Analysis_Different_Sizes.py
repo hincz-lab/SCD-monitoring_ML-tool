@@ -33,7 +33,7 @@ class CountAdheredBloodCells:
         X = np.zeros((self.alpha*self.beta, 128, 128, 3))
         height = np.shape(self.channel_image)[0]
         width = np.shape(self.channel_image)[1]
-        #self.channel_image = cv.resize(self.channel_image,(15000,5250), interpolation = cv.INTER_CUBIC).reshape(15000,5250,3)
+        self.channel_image = cv.resize(self.channel_image,(5250,15000), interpolation = cv.INTER_CUBIC).reshape(5250,15000,3)
         print(np.shape(self.channel_image))
         for ii in range(self.alpha):
             for jj in range(self.beta):
