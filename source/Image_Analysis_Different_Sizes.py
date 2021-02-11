@@ -43,6 +43,7 @@ class CountAdheredBloodCells:
         print("Total number of extracted tiles: ", len(X[:,0,0,0]))
         return X
 
+
     # zero-center normalization for both Phase I and II 
     def standard_norm(self, tile, phase):
         norm_tile = (tile - np.mean(tile))/(np.std(tile))
@@ -192,14 +193,28 @@ class CountAdheredBloodCells:
 
     # function that encompasses all the neccesary functions to complete Phase II 
     def count_predictions(self, ensemble, img_container, rbc_thres, wbc_thres, other_thres, phase=2):
-        X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
-        norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
+        #print("Counting Predictions")
+        #X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
+        #print("Next Creating Norm")
+        #norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
+        #print("Resizing")
+        sRBCFinal = 0
+        WBCFinal = 0
+        OtherFinal = 0
         for sample, image in enumerate(img_container):
-            X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
-            norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
-        y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
-        sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
-        return sRBC, WBC, Other
+            #X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
+            #norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
+            X_Phase2 = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
+            norm_X_Phase2 = self.standard_norm(X_Phase2, phase)
+            y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
+            sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
+            sRBCFinal = sRBC + sRBCFinal
+            WBCFinal = WBC + WBCFinal
+            WBCFinal = sRBC + OtherFinal
+        print("Done")
+        #y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
+        #sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
+        return sRBCFinal, WBCFinal, OtherFinal
 
 #    Call the pipeline for cell counting ...
 
@@ -218,15 +233,15 @@ class CountAdheredBloodCells:
         channel_mask = self.preprocess_channel_mask(norm_X, Phase1_ensemble, kk=0)
         print('Complete ...')
         # Preprare the Phase II data ...
-        print('Prepare Phase II data ...')
-        img_container = self.ext_IndividualCells(channel_mask)
-        print('Complete ...')
-        return img_container
+        return channel_mask
     
-    def call_phase_two(self, Phase2_ensemble,rbc_thres, wbc_thres, other_thres):
+    def call_phase_two(self, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, channel_mask):
+        print('Prepare Phase II data ...')
+        #img_container = self.ext_IndividualCells(channel_mask)
+        print('Complete ...')
         print('Implementing Phase II ...')    
-        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
+        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, self.ext_IndividualCells(channel_mask), rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
-
+        return sRBC, WBC, Other
+    
         return
-
