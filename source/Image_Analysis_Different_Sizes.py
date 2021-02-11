@@ -39,7 +39,8 @@ class CountAdheredBloodCells:
             for jj in range(self.beta):
                 y_slider, x_slider = ii*150, jj*150
                 image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
-                print()
+                print(y_slider,x_slider)
+                print(np.shape(image))
                 X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                 kk+=1
         print("Total number of extracted tiles: ", len(X[:,0,0,0]))
