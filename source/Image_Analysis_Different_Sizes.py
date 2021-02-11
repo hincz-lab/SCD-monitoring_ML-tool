@@ -31,6 +31,8 @@ class CountAdheredBloodCells:
     def process_tiles(self, kk=0):
         import cv2 as cv
         X = np.zeros((self.alpha*self.beta, 128, 128, 3))
+        #self.channel_image = cv.resize(self.channel_image,(floor()))
+        print(shape(self.channel_image))
         for ii in range(self.alpha):
             for jj in range(self.beta):
                 print(ii)
