@@ -98,8 +98,18 @@ class CountAdheredBloodCells:
             for jj in range(self.tiles_Horizontal):
                 y_slider, x_slider = ii*150, jj*150
                 pred_mask = y_preds[kk].astype('uint8')
-                pred_mask = cv.resize(pred_mask, (150,150), interpolation = cv.INTER_CUBIC)
-                channel_mask[0+y_slider:150+y_slider, 0+x_slider:150+x_slider] = pred_mask
+                if ii == self.tiles_Vertical - 1 and jj < self.tiles_Horizontal - 1:
+                    pred_mask = cv.resize(pred_mask, (150,self.height - (self.tiles_Vertical - 1)*150), interpolation = cv.INTER_CUBIC)
+                    channel_mask[0+y_slider:self.height, 0+x_slider:150+x_slider] = pred_mask
+                elif ii < self.tiles_Vertical - 1 and jj == self.tiles_Horizontal - 1:
+                    pred_mask = cv.resize(pred_mask, (self.width - (self.tiles_Horizontal - 1)*150,150), interpolation = cv.INTER_CUBIC)
+                    channel_mask[0+y_slider:150+y_slider, 0+x_slider:self.width] = pred_mask
+                elif ii == self.tiles_Vertical - 1 and jj == self.tiles_Horizontal - 1:
+                    pred_mask = cv.resize(pred_mask, (self.width - (self.tiles_Horizontal - 1)*150,self.height - (self.tiles_Vertical - 1)*150), interpolation = cv.INTER_CUBIC)
+                    channel_mask[0+y_slider:self.height, 0+x_slider:self.width] = pred_mask
+                else:
+                    pred_mask = cv.resize(pred_mask, (150,150), interpolation = cv.INTER_CUBIC)
+                    channel_mask[0+y_slider:150+y_slider, 0+x_slider:150+x_slider] = pred_mask
                 kk+=1
         self.mask = channel_mask
         print(np.shape(channel_mask))
