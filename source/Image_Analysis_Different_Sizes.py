@@ -250,6 +250,7 @@ class CountAdheredBloodCells:
         X = self.process_tiles()
         samples, height, width, depth = X.shape
         norm_X = np.zeros((samples, height, width, depth))
+        print("Norm Initialized")
         for sample in range(samples):
             norm_X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
         print('Complete ...')
