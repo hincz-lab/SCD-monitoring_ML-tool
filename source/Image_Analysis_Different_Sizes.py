@@ -90,10 +90,9 @@ class CountAdheredBloodCells:
         return y_preds
     
     # concatenate back the individual segmentation masks into a whole channel mask
-    def preprocess_channel_mask(self, X, ensemble, kk=0):
+    def preprocess_channel_mask(self, y_preds, ensemble, kk=0):
         print("Preprocessing Masks")
         channel_mask = np.zeros((self.height, self.width))
-        y_preds = self.predict_masks(X, ensemble)
         self.masks = y_preds
         for ii in range(self.tiles_Vertical):
             for jj in range(self.tiles_Horizontal):
@@ -258,7 +257,9 @@ class CountAdheredBloodCells:
         print('Complete ...')
         # Implement Phase I ...
         print('Implementing Phase I ...')
-        channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble, kk=0)
+        y_predictions = self.predict_masks(X, Phase1_ensemble)
+        X = None
+        channel_mask = self.preprocess_channel_mask(y_predictions, Phase1_ensemble, kk=0)
         print('Complete ...')
         # Preprare the Phase II data ...
         return channel_mask
