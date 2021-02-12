@@ -248,7 +248,9 @@ class CountAdheredBloodCells:
         # Prepare the Phase I data ...
         print('Prepare the Phase I data ...')
         X = self.process_tiles()
+        print("Out of function")
         samples, height, width, depth = X.shape
+        print(X.shape)
         norm_X = np.zeros((samples, height, width, depth))
         print("Norm Initialized")
         for sample in range(samples):
