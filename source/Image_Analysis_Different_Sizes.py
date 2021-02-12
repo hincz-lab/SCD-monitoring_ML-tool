@@ -254,11 +254,11 @@ class CountAdheredBloodCells:
         norm_X = np.zeros((samples, height, width, depth))
         print("Norm Initialized")
         for sample in range(samples):
-            norm_X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
+            X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
         print('Complete ...')
         # Implement Phase I ...
         print('Implementing Phase I ...')
-        channel_mask = self.preprocess_channel_mask(norm_X, Phase1_ensemble, kk=0)
+        channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble, kk=0)
         print('Complete ...')
         # Preprare the Phase II data ...
         return channel_mask
