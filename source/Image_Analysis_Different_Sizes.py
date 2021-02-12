@@ -41,8 +41,8 @@ class CountAdheredBloodCells:
                 y_slider, x_slider = ii*150, jj*150
                 if ii == tiles_Vertical - 1 and jj < tiles_Horizontal - 1:
                     image = self.channel_image[0+y_slider:height, 0+x_slider:150+x_slider,:]
-                elif ii == tiles < tiles_Vertical - 1 and jj == tiles_Horizontal - 1:
-                    image = self.channel_image[0+y_slider:height, 0+x_slider:width,:]
+                elif ii < tiles_Vertical - 1 and jj == tiles_Horizontal - 1:
+                    image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:width,:]
                 elif ii == tiles_Vertical - 1 and jj == tiles_Horizontal - 1:
                     image = self.channel_image[0+y_slider:height, 0+x_slider:width,:]
                 else:
