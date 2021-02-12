@@ -32,9 +32,9 @@ class CountAdheredBloodCells:
         import cv2 as cv
         X = np.zeros((self.alpha*self.beta, 128, 128, 3))
         height = np.shape(self.channel_image)[0]
-        tiles_Vertical = int(np.ceiling(height/150))
+        tiles_Vertical = int(np.ceil(height/150))
         width = np.shape(self.channel_image)[1]
-        tiles_Horizontal = int(np.floor(width/150))
+        tiles_Horizontal = int(np.ceil(width/150))
         #self.channel_image = cv.resize(self.channel_image,(15000,5250), interpolation = cv.INTER_CUBIC)
         for ii in range(tiles_Vertical):
             for jj in range(tiles_Horizontal):
