@@ -25,26 +25,30 @@ class CountAdheredBloodCells:
     # instance class
     def __init__(self, path, channel_filename):
         self.channel_image = cv.imread(path + channel_filename)
+        self.height = np.shape(self.channel_image)[0]
+        self.tiles_Vertical = int(np.ceil(height/150))
+        self.width = np.shape(self.channel_image)[1]
+        self.tiles_Horizontal = int(np.ceil(width/150))
 
 
     # crop individual tile images
     def process_tiles(self, kk=0):
         import cv2 as cv
-        height = np.shape(self.channel_image)[0]
-        tiles_Vertical = int(np.ceil(height/150))
-        width = np.shape(self.channel_image)[1]
-        tiles_Horizontal = int(np.ceil(width/150))
-        X = np.zeros((tiles_Horizontal*tiles_Vertical, 128, 128, 3))
+        #height = np.shape(self.channel_image)[0]
+        #tiles_Vertical = int(np.ceil(height/150))
+        #width = np.shape(self.channel_image)[1]
+        #tiles_Horizontal = int(np.ceil(width/150))
+        X = np.zeros((self.tiles_Horizontal*self.tiles_Vertical, 128, 128, 3))
         #self.channel_image = cv.resize(self.channel_image,(15000,5250), interpolation = cv.INTER_CUBIC)
-        for ii in range(tiles_Vertical):
-            for jj in range(tiles_Horizontal):
+        for ii in range(self.tiles_Vertical):
+            for jj in range(self.tiles_Horizontal):
                 y_slider, x_slider = ii*150, jj*150
-                if ii == tiles_Vertical - 1 and jj < tiles_Horizontal - 1:
-                    image = self.channel_image[0+y_slider:height, 0+x_slider:150+x_slider,:]
-                elif ii < tiles_Vertical - 1 and jj == tiles_Horizontal - 1:
-                    image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:width,:]
-                elif ii == tiles_Vertical - 1 and jj == tiles_Horizontal - 1:
-                    image = self.channel_image[0+y_slider:height, 0+x_slider:width,:]
+                if ii == self.tiles_Vertical - 1 and jj < self.tiles_Horizontal - 1:
+                    image = self.channel_image[0+y_slider:self.height, 0+x_slider:150+x_slider,:]
+                elif ii < self.tiles_Vertical - 1 and jj == self.tiles_Horizontal - 1:
+                    image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:self.width,:]
+                elif ii == self.tiles_Vertical - 1 and jj == self.tiles_Horizontal - 1:
+                    image = self.channel_image[0+y_slider:self.height, 0+x_slider:self.width,:]
                 else:
                     image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
                 X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
@@ -76,7 +80,7 @@ class CountAdheredBloodCells:
     # convert the predicted one hot encoded masks to label masks    
     def predict_masks(self, X, ensemble, phase = 1):
         y_preds = []
-        for sample in range(self.alpha*self.beta):
+        for sample in range(self.tiles_Vertical*self.tiles_Horizontal):
             tile = np.reshape(X[sample,:,:,:].astype('float32'), (1,128,128,3))
             norm_tile = self.standard_norm(tile, phase)
             mask = self.Phase1_prediction(ensemble, norm_tile)
