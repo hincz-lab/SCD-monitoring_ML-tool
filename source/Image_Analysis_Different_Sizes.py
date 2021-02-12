@@ -16,6 +16,7 @@ import time
 import tensorflow.keras
 from tensorflow.keras.models import load_model
 import tensorflow as tf
+import gc
 
 
 class CountAdheredBloodCells:
@@ -259,7 +260,6 @@ class CountAdheredBloodCells:
         print('Implementing Phase I ...')
         y_predictions = self.predict_masks(X, Phase1_ensemble)
         del X
-        import gc
         gc.collect()
         channel_mask = self.preprocess_channel_mask(y_predictions, Phase1_ensemble, kk=0)
         print('Complete ...')
