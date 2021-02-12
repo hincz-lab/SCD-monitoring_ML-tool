@@ -251,8 +251,8 @@ class CountAdheredBloodCells:
         print("Out of function")
         samples, height, width, depth = X.shape
         print(X.shape)
-        norm_X = np.zeros((samples, height, width, depth))
-        print("Norm Initialized")
+        #norm_X = np.zeros((samples, height, width, depth))
+        print("Norm Skipped")
         for sample in range(samples):
             X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
         print('Complete ...')
