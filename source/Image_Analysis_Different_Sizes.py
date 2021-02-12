@@ -258,7 +258,8 @@ class CountAdheredBloodCells:
         # Implement Phase I ...
         print('Implementing Phase I ...')
         y_predictions = self.predict_masks(X, Phase1_ensemble)
-        X = None
+        del X
+        gc.collect()
         channel_mask = self.preprocess_channel_mask(y_predictions, Phase1_ensemble, kk=0)
         print('Complete ...')
         # Preprare the Phase II data ...
