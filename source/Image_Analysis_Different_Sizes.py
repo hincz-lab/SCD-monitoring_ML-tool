@@ -102,6 +102,7 @@ class CountAdheredBloodCells:
                 channel_mask[0+y_slider:150+y_slider, 0+x_slider:150+x_slider] = pred_mask
                 kk+=1
         self.mask = channel_mask
+        print(np.shape(channel_mask))
         return channel_mask.astype('uint8')
     
 #    Class methods for preparing the input data in Phase 2 is found below ...
