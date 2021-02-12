@@ -94,8 +94,8 @@ class CountAdheredBloodCells:
         channel_mask = np.zeros((self.alpha*150, self.beta*150))
         y_preds = self.predict_masks(X, ensemble)
         self.masks = y_preds
-        for ii in range(self.alpha):
-            for jj in range(self.beta):
+        for ii in range(self.tiles_Vertical):
+            for jj in range(self.tiles_Horizontal):
                 y_slider, x_slider = ii*150, jj*150
                 pred_mask = y_preds[kk].astype('uint8')
                 pred_mask = cv.resize(pred_mask, (150,150), interpolation = cv.INTER_CUBIC)
