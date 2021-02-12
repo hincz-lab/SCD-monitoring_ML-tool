@@ -32,12 +32,21 @@ class CountAdheredBloodCells:
         import cv2 as cv
         X = np.zeros((self.alpha*self.beta, 128, 128, 3))
         height = np.shape(self.channel_image)[0]
+        tiles_Vertical = int(np.ceiling(height/150))
         width = np.shape(self.channel_image)[1]
-        self.channel_image = cv.resize(self.channel_image,(15000,5250), interpolation = cv.INTER_CUBIC)
-        for ii in range(self.alpha):
-            for jj in range(self.beta):
+        tiles_Horizontal = int(np.floor(width/150))
+        #self.channel_image = cv.resize(self.channel_image,(15000,5250), interpolation = cv.INTER_CUBIC)
+        for ii in range(tiles_Vertical):
+            for jj in range(tiles_Horizontal):
                 y_slider, x_slider = ii*150, jj*150
-                image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
+                if ii == tiles_Vertical - 1 and jj < tiles_Horizontal - 1:
+                    image = self.channel_image[0+y_slider:height, 0+x_slider:150+x_slider,:]
+                elif ii == tiles < tiles_Vertical - 1 and jj == tiles_Horizontal - 1:
+                    image = self.channel_image[0+y_slider:height, 0+x_slider:width,:]
+                elif ii == tiles_Vertical - 1 and jj == tiles_Horizontal - 1:
+                    image = self.channel_image[0+y_slider:height, 0+x_slider:width,:]
+                else:
+                    image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
                 X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                 kk+=1
         print("Total number of extracted tiles: ", len(X[:,0,0,0]))
