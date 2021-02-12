@@ -91,6 +91,7 @@ class CountAdheredBloodCells:
     
     # concatenate back the individual segmentation masks into a whole channel mask
     def preprocess_channel_mask(self, X, ensemble, kk=0):
+        print("Preprocessing Masks")
         channel_mask = np.zeros((self.height, self.width))
         y_preds = self.predict_masks(X, ensemble)
         self.masks = y_preds
