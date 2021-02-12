@@ -26,9 +26,9 @@ class CountAdheredBloodCells:
     def __init__(self, path, channel_filename):
         self.channel_image = cv.imread(path + channel_filename)
         self.height = np.shape(self.channel_image)[0]
-        self.tiles_Vertical = int(np.ceil(height/150))
+        self.tiles_Vertical = int(np.ceil(self.height/150))
         self.width = np.shape(self.channel_image)[1]
-        self.tiles_Horizontal = int(np.ceil(width/150))
+        self.tiles_Horizontal = int(np.ceil(self.width/150))
 
 
     # crop individual tile images
