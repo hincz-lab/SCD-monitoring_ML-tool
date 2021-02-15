@@ -148,10 +148,13 @@ class CountAdheredBloodCells:
         print("Extracting Cells")
         img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
         binary_mask = (channel_mask == 2)*1
+        print("Labeling Blobs")
         blobLabels = measure.label(binary_mask)
         labelProperties = measure.regionprops(blobLabels)
+        print("Extracting Centroids")
         centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
         img_container, tot_times = [], []
+        print("Finding Cells")
         for centroid in centroids:
             centroid_x,centroid_y = int(round(centroid[0],0)), int(round(centroid[1],0))
             bound_left, bound_right, bound_bottom, bound_top = centroid_x - int(crop_size/2), centroid_x + int(crop_size/2), centroid_y - int(crop_size/2), centroid_y + int(crop_size/2)
