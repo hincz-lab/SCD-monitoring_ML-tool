@@ -147,9 +147,10 @@ class CountAdheredBloodCells:
     def ext_IndividualCells(self, channel_mask, padding = 20, crop_size = 32, count = 0):
         print("Extracting Cells")
         img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
-        binary_mask = (channel_mask == 2)*1
+        #binary_mask = (channel_mask == 2)*1
         print("Labeling Blobs")
-        blobLabels = measure.label(binary_mask)
+        #blobLabels = measure.label(binary_mask)
+        blobLabels = measure.label((channel_mask == 2)*1)
         print("Label Properties")
         labelProperties = measure.regionprops(blobLabels)
         print("Extracting Centroids")
