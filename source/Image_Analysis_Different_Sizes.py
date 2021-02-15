@@ -150,6 +150,7 @@ class CountAdheredBloodCells:
         binary_mask = (channel_mask == 2)*1
         print("Labeling Blobs")
         blobLabels = measure.label(binary_mask)
+        print("Label Properties")
         labelProperties = measure.regionprops(blobLabels)
         print("Extracting Centroids")
         centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
