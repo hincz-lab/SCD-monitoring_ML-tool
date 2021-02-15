@@ -255,22 +255,31 @@ class CountAdheredBloodCells:
     def call_phase_one(self, Phase1_ensemble):
         # Prepare the Phase I data ...
         print('Prepare the Phase I data ...')
+        time.sleep(10)
         X = self.process_tiles()
         print("Out of function")
+        time.sleep(10)
         samples, height, width, depth = X.shape
         print(X.shape)
+        time.sleep(10)
         #norm_X = np.zeros((samples, height, width, depth))
         print("Norm Skipped")
         for sample in range(samples):
             X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
         print('Complete ...')
+        time.sleep(10)
         # Implement Phase I ...
         print('Implementing Phase I ...')
         y_predictions = self.predict_masks(X, Phase1_ensemble)
+        print("Predictions Made")
+        time.sleep(10)
         del X
         gc.collect()
+        print("Creating Mask")
+        time.sleep(10)
         channel_mask = self.preprocess_channel_mask(y_predictions, Phase1_ensemble, kk=0)
         print('Complete ...')
+        time.sleep(10)
         # Preprare the Phase II data ...
         return channel_mask
     
