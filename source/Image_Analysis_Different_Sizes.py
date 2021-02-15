@@ -150,9 +150,11 @@ class CountAdheredBloodCells:
         #binary_mask = (channel_mask == 2)*1
         print("Labeling Blobs")
         #blobLabels = measure.label(binary_mask)
-        blobLabels = measure.label((channel_mask == 2)*1)
+        #blobLabels = measure.label((channel_mask == 2)*1)
+        gc.collect()
         print("Label Properties")
-        labelProperties = measure.regionprops(blobLabels)
+        #labelProperties = measure.regionprops(blobLabels)
+        labelProperties = measure.regionprops(measure.label((channel_mask == 2)*1))
         print("Extracting Centroids")
         centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
         img_container, tot_times = [], []
