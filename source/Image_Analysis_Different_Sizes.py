@@ -144,7 +144,8 @@ class CountAdheredBloodCells:
                 bin_mask += (Zlabeled == label)*1.0
         return bin_mask
 
-    def ext_IndividualCells(self, channel_mask, padding = 20, crop_size = 32, count = 0):        
+    def ext_IndividualCells(self, channel_mask, padding = 20, crop_size = 32, count = 0):
+        print("Extracting Cells")
         img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
         binary_mask = (channel_mask == 2)*1
         blobLabels = measure.label(binary_mask)
