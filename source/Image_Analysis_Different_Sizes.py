@@ -218,7 +218,7 @@ class CountAdheredBloodCells:
 
     # function that encompasses all the neccesary functions to complete Phase II 
     def count_predictions(self, ensemble, img_container, rbc_thres, wbc_thres, other_thres, phase=2):
-        #print("Counting Predictions")
+        print("Counting Predictions")
         #X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
         #print("Next Creating Norm")
         #norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
