@@ -189,10 +189,10 @@ class CountAdheredBloodCells:
     # function that encompasses all the neccesary functions to complete Phase II 
     def count_predictions(self, ensemble, img_container, rbc_thres, wbc_thres, other_thres, phase=2):
         X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
-        norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
+        #norm_X_Phase2 = np.zeros((len(img_container), 224, 224, 3))
         for sample, image in enumerate(img_container):
             X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
-            norm_X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
+            X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
         y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
         sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
         return sRBC, WBC, Other
@@ -205,9 +205,9 @@ class CountAdheredBloodCells:
         print('Prepare the Phase I data ...')
         X = self.process_tiles()
         samples, height, width, depth = X.shape
-        norm_X = np.zeros((samples, height, width, depth))
+        #norm_X = np.zeros((samples, height, width, depth))
         for sample in range(samples):
-            norm_X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
+            X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
         print('Complete ...')
         # Implement Phase I ...
         print('Implementing Phase I ...')
