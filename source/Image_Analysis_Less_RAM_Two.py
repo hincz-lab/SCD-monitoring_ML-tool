@@ -241,13 +241,48 @@ class CountAdheredBloodCells:
         print('Complete ...')
         # Preprare the Phase II data ...
         print('Prepare Phase II data ...')
-        img_container = self.ext_IndividualCells(channel_mask)
+        #img_container = self.ext_IndividualCells(channel_mask)
+        sRBC_Total = 0
+        WBC_Total = 0
+        other_Total = 0
+        img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
+        binary_mask = (channel_mask == 2)*1
+        blobLabels = measure.label(binary_mask)
+        labelProperties = measure.regionprops(blobLabels)
+        centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
+        img_container, tot_times = [], []
+        for centroid in centroids:
+            centroid_x,centroid_y = int(round(centroid[0],0)), int(round(centroid[1],0))
+            bound_left, bound_right, bound_bottom, bound_top = centroid_x - int(crop_size/2), centroid_x + int(crop_size/2), centroid_y - int(crop_size/2), centroid_y + int(crop_size/2)
+            # corret for the padding
+            bound_left += padding
+            bound_right += padding
+            bound_bottom += padding
+            bound_top += padding
+            if bound_left<0 and bound_right>0: 
+                bound_right -= bound_left
+                bound_left -= bound_left
+            elif bound_left>0 and bound_right<0:
+                bound_left -= bound_right
+                bound_right -= bound_right
+            if bound_bottom<0 and bound_top>0:
+                bound_top -= bound_bottom
+                bound_bottom -= bound_bottom
+            elif bound_bottom>0 and bound_top<0:
+                bound_bottom -= bound_top
+                bound_top -= bound_top
+            cell = img_borders[bound_left:bound_right, bound_bottom:bound_top,:] 
+            img_container = [cell]
+            sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
+            sRBC_Total = sRBC_Total + sRBC
+            WBC_Total = WBC_Total + WBC
+            other_Total = other_Total + Other
         print('Complete ...')
         # Implement Phase II ...
         print('Implementing Phase II ...')
-        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
+        #sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
-        return sRBC, WBC, Other
+        return sRBC_Total, WBC_Total, other_Total
     
 
         return
