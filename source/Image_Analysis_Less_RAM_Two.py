@@ -193,7 +193,7 @@ class CountAdheredBloodCells:
         for sample, image in enumerate(img_container):
             X_Phase2[sample,:,:,:] = cv.resize(image.astype('float32'), (224,224), interpolation=cv.INTER_CUBIC)*1.0/255.0
             X_Phase2[sample,:,:,:] = self.standard_norm(X_Phase2[sample,:,:,:], phase)
-        y_preds_Phase2 = self.Phase2_prediction(ensemble, norm_X_Phase2)
+        y_preds_Phase2 = self.Phase2_prediction(ensemble, X_Phase2)
         sRBC,WBC,Other = self.count_classes(y_preds_Phase2, rbc_thres, wbc_thres, other_thres)
         return sRBC, WBC, Other
 
@@ -211,7 +211,7 @@ class CountAdheredBloodCells:
         print('Complete ...')
         # Implement Phase I ...
         print('Implementing Phase I ...')
-        channel_mask = self.preprocess_channel_mask(norm_X, Phase1_ensemble, kk=0)
+        channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble, kk=0)
         print('Complete ...')
         # Preprare the Phase II data ...
         print('Prepare Phase II data ...')
