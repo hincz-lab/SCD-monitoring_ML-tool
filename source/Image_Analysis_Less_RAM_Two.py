@@ -222,6 +222,32 @@ class CountAdheredBloodCells:
         sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
         print('Complete ...\n')
         return sRBC, WBC, Other
+
+    def call_Phase_One(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres):
+        # Prepare the Phase I data ...
+        print('Prepare the Phase I data ...')
+        X = self.process_tiles()
+        samples, height, width, depth = X.shape
+        #norm_X = np.zeros((samples, height, width, depth))
+        for sample in range(samples):
+            X[sample, :, :, :] = self.standard_norm(X[sample, :, :, :], 1)
+        print('Complete ...')
+        # Implement Phase I ...
+        print('Implementing Phase I ...')
+        channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble, kk=0)
+        return channel_mask
+    
+    def call_Phase_Two(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, channel_mask):
+        print('Complete ...')
+        # Preprare the Phase II data ...
+        print('Prepare Phase II data ...')
+        img_container = self.ext_IndividualCells(channel_mask)
+        print('Complete ...')
+        # Implement Phase II ...
+        print('Implementing Phase II ...')
+        sRBC, WBC, Other = self.count_predictions(Phase2_ensemble, img_container, rbc_thres, wbc_thres, other_thres)
+        print('Complete ...\n')
+        return sRBC, WBC, Other
     
 
         return
