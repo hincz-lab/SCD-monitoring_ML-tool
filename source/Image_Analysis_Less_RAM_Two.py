@@ -245,6 +245,8 @@ class CountAdheredBloodCells:
         sRBC_Total = 0
         WBC_Total = 0
         other_Total = 0
+        padding = 20
+        crop_size = 32
         img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
         binary_mask = (channel_mask == 2)*1
         blobLabels = measure.label(binary_mask)
