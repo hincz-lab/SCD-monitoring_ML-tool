@@ -265,7 +265,7 @@ class CountAdheredBloodCells:
         channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble, kk=0)
         return channel_mask
     
-    def call_Phase_Two(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, binary_mask):
+    def call_Phase_Two(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, centroids):
         print('Complete ...')
         # Preprare the Phase II data ...
         print('Prepare Phase II data ...')
@@ -277,9 +277,9 @@ class CountAdheredBloodCells:
         crop_size = 32
         img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
         #binary_mask = (channel_mask == 2)*1
-        blobLabels = measure.label(binary_mask)
-        labelProperties = measure.regionprops(blobLabels)
-        centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
+        #blobLabels = measure.label(binary_mask)
+        #labelProperties = measure.regionprops(blobLabels)
+        #centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
         img_container, tot_times = [], []
         for centroid in centroids:
             centroid_x,centroid_y = int(round(centroid[0],0)), int(round(centroid[1],0))
