@@ -34,7 +34,7 @@ class CountAdheredBloodCells:
     def process_tiles(self, kk=0):
         import cv2 as cv
         #X = np.zeros((self.alpha*self.beta, 128, 128, 3))
-        X = np.zeros((self.channel_Width*self.channel_Height, 128, 128, 3))
+        X = np.zeros((self.horizontal_Chunks*self.vertical_Chunks, 128, 128, 3))
         for ii in range(self.vertical_Chunks):
             for jj in range(self.horizontal_Chunks):
                 y_slider, x_slider = ii*150, jj*150
