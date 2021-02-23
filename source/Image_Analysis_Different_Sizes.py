@@ -24,7 +24,7 @@ class CountAdheredBloodCells:
     # instance class
     def __init__(self, path, channel_filename):
         #self.channel_image = cv.imread(path + channel_filename)
-        self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
+        #self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
         self.channel_Width = self.channel_image.shape[1]
         self.channel_Height = self.channel_image.shape[0]
         self.horizontal_Chunks = int(np.floor(self.channel_Width/150))
