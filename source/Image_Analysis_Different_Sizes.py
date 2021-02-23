@@ -27,8 +27,8 @@ class CountAdheredBloodCells:
         #self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
         self.channel_Width = self.channel_image.shape[1]
         self.channel_Height = self.channel_image.shape[0]
-        self.horizontal_Chunks = int(np.floor(0.85*self.channel_Width/150))
-        self.vertical_Chunks = int(np.floor(0.85*self.channel_Height/150))
+        self.horizontal_Chunks = int(np.floor(0.9*self.channel_Width/150))
+        self.vertical_Chunks = int(np.floor(0.9*self.channel_Height/150))
 
     # crop individual tile images
     def process_tiles(self, kk=0):
