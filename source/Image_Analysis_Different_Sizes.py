@@ -19,7 +19,7 @@ import tensorflow as tf
 
 class CountAdheredBloodCells:
 
-    alpha,beta = 35, 100 # class variables (amount of channel paritions
+    #alpha,beta = 35, 100 # class variables (amount of channel paritions
     
     # instance class
     def __init__(self, path, channel_filename):
@@ -73,7 +73,14 @@ class CountAdheredBloodCells:
     # convert the predicted one hot encoded masks to label masks    
     def predict_masks(self, X, ensemble, phase = 1):
         y_preds = []
-        for sample in range(self.alpha*self.beta):
+        #for sample in range(self.alpha*self.beta):
+            #tile = np.reshape(X[sample,:,:,:].astype('float32'), (1,128,128,3))
+            #norm_tile = self.standard_norm(tile, phase)
+            #mask = self.Phase1_prediction(ensemble, norm_tile)
+            #mask = np.argmax(mask, axis = 3)
+            #mask = np.reshape(mask, (128,128,1))[:,:,0]
+            #y_preds.append(mask)
+        for sample in range(self.vertical_Chunks*self.horizontal_Chunks):
             tile = np.reshape(X[sample,:,:,:].astype('float32'), (1,128,128,3))
             norm_tile = self.standard_norm(tile, phase)
             mask = self.Phase1_prediction(ensemble, norm_tile)
@@ -84,11 +91,21 @@ class CountAdheredBloodCells:
     
     # concatenate back the individual segmentation masks into a whole channel mask
     def preprocess_channel_mask(self, X, ensemble, kk=0):
-        channel_mask = np.zeros((self.alpha*150, self.beta*150))
+        #channel_mask = np.zeros((self.alpha*150, self.beta*150))
+        #y_preds = self.predict_masks(X, ensemble)
+        #self.masks = y_preds
+        #for ii in range(self.alpha):
+            #for jj in range(self.beta):
+                #y_slider, x_slider = ii*150, jj*150
+                #pred_mask = y_preds[kk].astype('uint8')
+                #pred_mask = cv.resize(pred_mask, (150,150), interpolation = cv.INTER_CUBIC)
+                #channel_mask[0+y_slider:150+y_slider, 0+x_slider:150+x_slider] = pred_mask
+                #kk+=1
+        channel_mask = np.zeros((self.vertical_Chunks*150, self.horizontal_Chunks*150))
         y_preds = self.predict_masks(X, ensemble)
         self.masks = y_preds
-        for ii in range(self.alpha):
-            for jj in range(self.beta):
+        for ii in range(self.vertical_Chunks):
+            for jj in range(self.horizontal_Chunks):
                 y_slider, x_slider = ii*150, jj*150
                 pred_mask = y_preds[kk].astype('uint8')
                 pred_mask = cv.resize(pred_mask, (150,150), interpolation = cv.INTER_CUBIC)
