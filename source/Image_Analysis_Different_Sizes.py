@@ -25,18 +25,26 @@ class CountAdheredBloodCells:
     def __init__(self, path, channel_filename):
         #self.channel_image = cv.imread(path + channel_filename)
         self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
-
+        self.channel_Width = self.channel_image.shape()[1]
+        self.channel_Height = self.channel.shape()[0]
 
     # crop individual tile images
     def process_tiles(self, kk=0):
         import cv2 as cv
-        X = np.zeros((self.alpha*self.beta, 128, 128, 3))
-        for ii in range(self.alpha):
-            for jj in range(self.beta):
+        #X = np.zeros((self.alpha*self.beta, 128, 128, 3))
+        X = np.zeros((self.channel_Width*self.channel_Height, 128, 128, 3))
+        for ii in range(self.channel_Height):
+            for jj in range(self.channel_Width):
                 y_slider, x_slider = ii*150, jj*150
                 image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
                 X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                 kk+=1
+        #for ii in range(self.alpha):
+            #for jj in range(self.beta):
+                #y_slider, x_slider = ii*150, jj*150
+                #image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
+                #X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
+                #kk+=1
         print("Total number of extracted tiles: ", len(X[:,0,0,0]))
         return X
 
