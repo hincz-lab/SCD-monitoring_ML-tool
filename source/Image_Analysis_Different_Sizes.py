@@ -33,10 +33,15 @@ class CountAdheredBloodCells:
     # crop individual tile images
     def process_tiles(self, bN, nOB, kk=0):
         import cv2 as cv
-        vertical_Pixel_Break = int((np.floor(self.vertical_Chunks/(nOB*2))*150))
-        horizontal_Pixel_Break = int(np.floor(self.horizontal_Chunks/(nOB*2))*150)
-        batch_Horizontal_Chunks = int(np.floor(self.horizontal_Chunks/(nOB*2)))
-        batch_Vertical_Chunks = int(np.floor(self.vertical_Chunks/(nOB*2)))
+        vertical_Pixel_Break = int((np.floor(2*self.vertical_Chunks/(nOB))*150))
+        horizontal_Pixel_Break = int(np.floor(2*self.horizontal_Chunks/(nOB))*150)
+        batch_Horizontal_Chunks = int(np.floor(2*self.horizontal_Chunks/(nOB)))
+        batch_Vertical_Chunks = int(np.floor(2*self.vertical_Chunks/(nOB)))
+        print(self.horizontal_Chunks)
+        print(self.vertical_Chunks)
+        print(batch_Horizontal_Chunks)
+        print(batch_Vertical_Chunks)
+        print(batch_Horizontal_Chunks*batch_Vertical_Chunks)
         #X = np.zeros((self.alpha*self.beta, 128, 128, 3))
         X = np.zeros((batch_Horizontal_Chunks*batch_Vertical_Chunks, 128, 128, 3))
         for ii in range(batch_Vertical_Chunks):
