@@ -38,7 +38,7 @@ class CountAdheredBloodCells:
         batch_Horizontal_Chunks = int(np.floor(self.horizontal_Chunks/(nOB*2)))
         batch_Vertical_Chunks = int(np.floor(self.vertical_Chunks/(nOB*2)))
         #X = np.zeros((self.alpha*self.beta, 128, 128, 3))
-        X = np.zeros(batch_Horizontal_Chunks*batch_Vertical_Chunks, 128, 128, 3))
+        X = np.zeros((batch_Horizontal_Chunks*batch_Vertical_Chunks, 128, 128, 3))
         for ii in range(batch_Vertical_Chunks):
             for jj in range(batch_Horizontal_Chunks):
                 y_slider, x_slider = ii*150, jj*150
