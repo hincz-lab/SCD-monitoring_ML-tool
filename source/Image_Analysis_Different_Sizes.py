@@ -34,24 +34,24 @@ class CountAdheredBloodCells:
     def process_tiles(self, bN, nOB, kk=0):
         import cv2 as cv
         #X = np.zeros((self.alpha*self.beta, 128, 128, 3))
-        X = np.zeros((np.floor(self.horizontal_Chunks/(nOB*2))*np.floor(self.vertical_Chunks/(nOB*2)), 128, 128, 3))
-        for ii in range(np.floor(self.vertical_Chunks/(nOB*2))):
-            for jj in range(np.floor(self.horizontal_Chunks/(nOB*2))):
+        X = np.zeros(int(np.floor(self.horizontal_Chunks/(nOB*2))*np.floor(self.vertical_Chunks/(nOB*2)), 128, 128, 3))
+        for ii in range(int(np.floor(self.vertical_Chunks/(nOB*2)))):
+            for jj in range(int(np.floor(self.horizontal_Chunks/(nOB*2)))):
                 y_slider, x_slider = ii*150, jj*150
                 if bN == 0:
                     image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
                     X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                     kk+=1
                 elif bN == 1:
-                    image = self.channel_image[(np.floor(self.vertical_Chunks/(nOB*2))*150)+y_slider:(np.floor(self.vertical_Chunks/(nOB*2))*150) +150+y_slider, 0+x_slider:150+x_slider,:]
+                    image = self.channel_image[int((np.floor(self.vertical_Chunks/(nOB*2))*150))+y_slider:(int(np.floor(self.vertical_Chunks/(nOB*2))*150)) +150+y_slider, 0+x_slider:150+x_slider,:]
                     X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                     kk+=1
                 elif bN == 2:
-                    image = self.channel_image[0+y_slider:150+y_slider, (np.floor(self.horizontal_Chunks/(nOB*2))*150)+x_slider:(np.floor(self.horizontal_Chunks/(nOB*2))*150) + 150+x_slider,:]
+                    image = self.channel_image[0+y_slider:150+y_slider, (int(np.floor(self.horizontal_Chunks/(nOB*2))*150))+x_slider:int(np.floor(self.horizontal_Chunks/(nOB*2))*150) + 150+x_slider,:]
                     X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                     kk+=1
                 elif bN == 3:
-                    image = self.channel_image[(np.floor(self.vertical_Chunks/(nOB*2))*150)+y_slider:(np.floor(self.vertical_Chunks/(nOB*2))*150) +150+y_slider, (np.floor(self.horizontal_Chunks/(nOB*2))*150)+x_slider:(np.floor(self.horizontal_Chunks/(nOB*2))*150) + 150+x_slider,:]
+                    image = self.channel_image[int(np.floor(self.vertical_Chunks/(nOB*2))*150)+y_slider:int(np.floor(self.vertical_Chunks/(nOB*2))*150) +150+y_slider, int(np.floor(self.horizontal_Chunks/(nOB*2))*150)+x_slider:int(np.floor(self.horizontal_Chunks/(nOB*2))*150) + 150+x_slider,:]
                     X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                     kk+=1
                 image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
