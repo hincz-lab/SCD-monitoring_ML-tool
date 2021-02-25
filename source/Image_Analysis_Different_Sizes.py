@@ -314,9 +314,9 @@ class CountAdheredBloodCells:
         if batch_Number == 0:
             img_borders = cv.copyMakeBorder(self.channel_image[0:vertical_Pixel_Break,0:horizontal_Pixel_Break].copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
         if batch_Number == 1:
-            img_borders = cv.copyMakeBorder(self.channel_image[0:vertical_Pixel_Break,horizontal_Pixel_Break:].copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
-        if batch_Number == 2:
             img_borders = cv.copyMakeBorder(self.channel_image[vertical_Pixel_Break:,0:horizontal_Pixel_Break].copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
+        if batch_Number == 2:
+            img_borders = cv.copyMakeBorder(self.channel_image[0:vertical_Pixel_Break,horizontal_Pixel_Break:].copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
         if batch_Number == 3:
             img_borders = cv.copyMakeBorder(self.channel_image[vertical_Pixel_Break:,horizontal_Pixel_Break:].copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
         #binary_mask = (channel_mask == 2)*1
