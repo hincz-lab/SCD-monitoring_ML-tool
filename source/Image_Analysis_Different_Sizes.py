@@ -27,8 +27,29 @@ class CountAdheredBloodCells:
         #self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
         self.channel_Width = self.channel_image.shape[1]
         self.channel_Height = self.channel_image.shape[0]
+        self.new_Width = 0
+        self.new_Height = 0
+        self.new_Horizontal_Chunks = 0
+        self.new_Vertical_Chunks = 0
         self.horizontal_Chunks = int(np.floor(1*self.channel_Width/150))
         self.vertical_Chunks = int(np.floor(1*self.channel_Height/150))
+        if (self.channel_Width/150)%2 != 0 and (self.channel_Height/150)%2 != 0:
+            self.vertical_Chunks = int(np.floor(1*self.channel_Height/150)) - 1
+            self.new_Height = self.vertical_Chunks*150
+            self.horizontal_Chunks = int(np.floor(1*self.channel_Width/150)) - 1
+            self.new_Width = self.horizontal_Chunks*150
+            self.channel_image = cv.resize(cv.imread(path + channel_filename), (self.new_Width,self.new_Height), interpolation = cv.INTER_CUBIC)
+        elif (self.channel_Width/150)%2 == 0 and (self.channel_Height/150)%2 != 0:
+            self.vertical_Chunks = int(np.floor(1*self.channel_Height/150)) - 1
+            self.new_Height = self.vertical_Chunks*150
+            self.channel_image = cv.resize(cv.imread(path + channel_filename), (self.channel_Width,self.new_Height), interpolation = cv.INTER_CUBIC)
+        elif (self.channel_Width/150)%2 != 0 and (self.channel_Height/150)%2 == 0:
+            self.vertical_Chunks = int(np.floor(1*self.channel_Height/150)) - 1
+            self.new_Height = self.vertical_Chunks*150
+            self.channel_image = cv.resize(cv.imread(path + channel_filename), (self.new_Width,self.channel_Height), interpolation = cv.INTER_CUBIC)
+        else:
+            continue
+          
 
     # crop individual tile images
     def process_tiles(self, bN, nOB, kk=0):
