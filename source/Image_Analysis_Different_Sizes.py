@@ -115,7 +115,7 @@ class CountAdheredBloodCells:
         return y_preds
     
     # concatenate back the individual segmentation masks into a whole channel mask
-    def preprocess_channel_mask(self, X, ensemble, kk=0):
+    def preprocess_channel_mask(self, X, ensemble,nOB kk=0):
         #channel_mask = np.zeros((self.alpha*150, self.beta*150))
         #y_preds = self.predict_masks(X, ensemble)
         #self.masks = y_preds
@@ -126,11 +126,16 @@ class CountAdheredBloodCells:
                 #pred_mask = cv.resize(pred_mask, (150,150), interpolation = cv.INTER_CUBIC)
                 #channel_mask[0+y_slider:150+y_slider, 0+x_slider:150+x_slider] = pred_mask
                 #kk+=1
-        channel_mask = np.zeros((self.vertical_Chunks*150, self.horizontal_Chunks*150))
+        vertical_Pixel_Break = int((np.floor(2*self.vertical_Chunks/(nOB))*150))
+        horizontal_Pixel_Break = int(np.floor(2*self.horizontal_Chunks/(nOB))*150)
+        batch_Horizontal_Chunks = int(np.floor(2*self.horizontal_Chunks/(nOB)))
+        batch_Vertical_Chunks = int(np.floor(2*self.vertical_Chunks/(nOB)))
+        #channel_mask = np.zeros((self.vertical_Chunks*150, self.horizontal_Chunks*150))
+        channel_mask = np.zeros((batch_Vertical_Chunks*150, batch_Horizontal_Chunks*150))
         y_preds = self.predict_masks(X, ensemble)
         self.masks = y_preds
-        for ii in range(self.vertical_Chunks):
-            for jj in range(self.horizontal_Chunks):
+        for ii in range(batch_Vertical_Chunks):
+            for jj in range(batch_Horizontal_Chunks):
                 y_slider, x_slider = ii*150, jj*150
                 pred_mask = y_preds[kk].astype('uint8')
                 pred_mask = cv.resize(pred_mask, (150,150), interpolation = cv.INTER_CUBIC)
@@ -287,7 +292,7 @@ class CountAdheredBloodCells:
         print('Complete ...')
         # Implement Phase I ...
         print('Implementing Phase I ...')
-        channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble, kk=0)
+        channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble,number_Of_Batches, kk=0)
         return channel_mask
     
     def call_Phase_Two(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, centroids):
