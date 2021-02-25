@@ -44,8 +44,8 @@ class CountAdheredBloodCells:
             self.new_Height = self.vertical_Chunks*150
             self.channel_image = cv.resize(cv.imread(path + channel_filename), (self.channel_Width,self.new_Height), interpolation = cv.INTER_CUBIC)
         elif (self.channel_Width/150)%2 != 0 and (self.channel_Height/150)%2 == 0:
-            self.vertical_Chunks = int(np.floor(1*self.channel_Height/150)) - 1
-            self.new_Height = self.vertical_Chunks*150
+            self.horizontal_Chunks = int(np.floor(1*self.channel_Width/150)) - 1
+            self.new_Width = self.horizontal_Chunks*150
             self.channel_image = cv.resize(cv.imread(path + channel_filename), (self.new_Width,self.channel_Height), interpolation = cv.INTER_CUBIC)
         else:
             continue
