@@ -299,7 +299,7 @@ class CountAdheredBloodCells:
         channel_mask = self.preprocess_channel_mask(X, Phase1_ensemble,number_Of_Batches, kk=0)
         return channel_mask
     
-    def call_Phase_Two(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, centroids):
+    def call_Phase_Two(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, centroids, batch_Number, nOB):
         print('Complete ...')
         # Preprare the Phase II data ...
         print('Prepare Phase II data ...')
@@ -309,7 +309,16 @@ class CountAdheredBloodCells:
         other_Total = 0
         padding = 20
         crop_size = 32
-        img_borders = cv.copyMakeBorder(self.channel_image.copy(), padding, padding, padding, padding, cv.BORDER_CONSTANT)
+        vertical_Pixel_Break = int((np.floor(2*self.vertical_Chunks/(nOB))*150))
+        horizontal_Pixel_Break = int(np.floor(2*self.horizontal_Chunks/(nOB))*150)
+        if batch_Number == 0:
+            img_borders = cv.copyMakeBorder(self.channel_image.copy()[0:horizontal_Pixel_Break,0:vertical_Pixel_Break], padding, padding, padding, padding, cv.BORDER_CONSTANT)
+        if batch_Number == 1:
+            img_borders = cv.copyMakeBorder(self.channel_image.copy()[0:horizontal_Pixel_Break,vertical_Pixel_Break:], padding, padding, padding, padding, cv.BORDER_CONSTANT)
+        if batch_Number == 2:
+            img_borders = cv.copyMakeBorder(self.channel_image.copy()[horizontal_Pixel_Break:,0:vertical_Pixel_Break], padding, padding, padding, padding, cv.BORDER_CONSTANT)
+        if batch_Number == 3:
+            img_borders = cv.copyMakeBorder(self.channel_image.copy()[horizontal_Pixel_Break:,vertical_Pixel_Break:], padding, padding, padding, padding, cv.BORDER_CONSTANT)
         #binary_mask = (channel_mask == 2)*1
         #blobLabels = measure.label(binary_mask)
         #labelProperties = measure.regionprops(blobLabels)
