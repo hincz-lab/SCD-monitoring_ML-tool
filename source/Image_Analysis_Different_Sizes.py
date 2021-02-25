@@ -31,13 +31,29 @@ class CountAdheredBloodCells:
         self.vertical_Chunks = int(np.floor(0.5*self.channel_Height/150))
 
     # crop individual tile images
-    def process_tiles(self, kk=0):
+    def process_tiles(self, bN, nOB, kk=0):
         import cv2 as cv
         #X = np.zeros((self.alpha*self.beta, 128, 128, 3))
-        X = np.zeros((self.horizontal_Chunks*self.vertical_Chunks, 128, 128, 3))
-        for ii in range(self.vertical_Chunks):
-            for jj in range(self.horizontal_Chunks):
+        X = np.zeros((np.floor(self.horizontal_Chunks/(nOB*2))*np.floor(self.vertical_Chunks/(nOB*2)), 128, 128, 3))
+        for ii in range(np.floor(self.vertical_Chunks/(nOB*2))):
+            for jj in range(np.floor(self.horizontal_Chunks/(nOB*2))):
                 y_slider, x_slider = ii*150, jj*150
+                if bN == 0:
+                    image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
+                    X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
+                    kk+=1
+                elif bN == 1:
+                    image = self.channel_image[(np.floor(self.vertical_Chunks/(nOB*2))*150)+y_slider:(np.floor(self.vertical_Chunks/(nOB*2))*150) +150+y_slider, 0+x_slider:150+x_slider,:]
+                    X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
+                    kk+=1
+                elif bN == 2:
+                    image = self.channel_image[0+y_slider:150+y_slider, (np.floor(self.horizontal_Chunks/(nOB*2))*150)+x_slider:(np.floor(self.horizontal_Chunks/(nOB*2))*150) + 150+x_slider,:]
+                    X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
+                    kk+=1
+                elif bN == 3:
+                    image = self.channel_image[(np.floor(self.vertical_Chunks/(nOB*2))*150)+y_slider:(np.floor(self.vertical_Chunks/(nOB*2))*150) +150+y_slider, (np.floor(self.horizontal_Chunks/(nOB*2))*150)+x_slider:(np.floor(self.horizontal_Chunks/(nOB*2))*150) + 150+x_slider,:]
+                    X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
+                    kk+=1
                 image = self.channel_image[0+y_slider:150+y_slider, 0+x_slider:150+x_slider,:]
                 X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                 kk+=1
@@ -251,10 +267,10 @@ class CountAdheredBloodCells:
         print('Complete ...\n')
         return sRBC, WBC, Other
 
-    def call_Phase_One(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres):
+    def call_Phase_One(self, Phase1_ensemble, Phase2_ensemble,rbc_thres, wbc_thres, other_thres, batch_Number,number_Of_Batches):
         # Prepare the Phase I data ...
         print('Prepare the Phase I data ...')
-        X = self.process_tiles()
+        X = self.process_tiles(batch_Number, number_Of_Batches)
         samples, height, width, depth = X.shape
         #norm_X = np.zeros((samples, height, width, depth))
         for sample in range(samples):
