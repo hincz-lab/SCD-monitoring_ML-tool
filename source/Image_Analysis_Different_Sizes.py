@@ -96,8 +96,12 @@ class CountAdheredBloodCells:
         return empty_mask
         
     # convert the predicted one hot encoded masks to label masks    
-    def predict_masks(self, X, ensemble, phase = 1):
+    def predict_masks(self, X, ensemble, nOB, phase = 1):
         y_preds = []
+        vertical_Pixel_Break = int((np.floor(2*self.vertical_Chunks/(nOB))*150))
+        horizontal_Pixel_Break = int(np.floor(2*self.horizontal_Chunks/(nOB))*150)
+        batch_Horizontal_Chunks = int(np.floor(2*self.horizontal_Chunks/(nOB)))
+        batch_Vertical_Chunks = int(np.floor(2*self.vertical_Chunks/(nOB)))
         #for sample in range(self.alpha*self.beta):
             #tile = np.reshape(X[sample,:,:,:].astype('float32'), (1,128,128,3))
             #norm_tile = self.standard_norm(tile, phase)
@@ -105,7 +109,7 @@ class CountAdheredBloodCells:
             #mask = np.argmax(mask, axis = 3)
             #mask = np.reshape(mask, (128,128,1))[:,:,0]
             #y_preds.append(mask)
-        for sample in range(self.vertical_Chunks*self.horizontal_Chunks):
+        for sample in range(batch_Vertical_Chunks*batch_Horizontal_Chunks):
             tile = np.reshape(X[sample,:,:,:].astype('float32'), (1,128,128,3))
             norm_tile = self.standard_norm(tile, phase)
             mask = self.Phase1_prediction(ensemble, norm_tile)
@@ -132,7 +136,7 @@ class CountAdheredBloodCells:
         batch_Vertical_Chunks = int(np.floor(2*self.vertical_Chunks/(nOB)))
         #channel_mask = np.zeros((self.vertical_Chunks*150, self.horizontal_Chunks*150))
         channel_mask = np.zeros((batch_Vertical_Chunks*150, batch_Horizontal_Chunks*150))
-        y_preds = self.predict_masks(X, ensemble)
+        y_preds = self.predict_masks(X, ensemble, nOB)
         self.masks = y_preds
         for ii in range(batch_Vertical_Chunks):
             for jj in range(batch_Horizontal_Chunks):
