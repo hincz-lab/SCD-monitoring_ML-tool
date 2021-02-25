@@ -23,8 +23,8 @@ class CountAdheredBloodCells:
     
     # instance class
     def __init__(self, path, channel_filename):
-        self.channel_image = cv.imread(path + channel_filename)
-        #self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
+        #self.channel_image = cv.imread(path + channel_filename)
+        self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
 
 
     # crop individual tile images
@@ -122,6 +122,8 @@ class CountAdheredBloodCells:
         labelProperties = measure.regionprops(blobLabels)
         centroids = [prop.centroid for prop in labelProperties if prop.area > 60]
         img_container, tot_times = [], []
+        for centroid in range(len(centroids)):
+            print(centroids[centroid])
         for centroid in centroids:
             centroid_x,centroid_y = int(round(centroid[0],0)), int(round(centroid[1],0))
             bound_left, bound_right, bound_bottom, bound_top = centroid_x - int(crop_size/2), centroid_x + int(crop_size/2), centroid_y - int(crop_size/2), centroid_y + int(crop_size/2)
