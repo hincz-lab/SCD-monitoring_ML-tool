@@ -56,7 +56,7 @@ class CountAdheredBloodCells:
                     X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                     kk+=1
                 elif bN == 2:
-                    image = self.channel_image[0+y_slider:150+y_slider, horizonal_Pixel_Break+x_slider:horizontal_Pixel_Break+ 150+x_slider,:]
+                    image = self.channel_image[0+y_slider:150+y_slider, horizontal_Pixel_Break+x_slider:horizontal_Pixel_Break+ 150+x_slider,:]
                     X[kk,:,:,:] = cv.resize(image, (128,128), interpolation = cv.INTER_CUBIC).reshape(128,128,3)
                     kk+=1
                 elif bN == 3:
