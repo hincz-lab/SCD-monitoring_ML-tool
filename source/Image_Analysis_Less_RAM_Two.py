@@ -23,8 +23,8 @@ class CountAdheredBloodCells:
     
     # instance class
     def __init__(self, path, channel_filename):
-        #self.channel_image = cv.imread(path + channel_filename)
-        self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
+        self.channel_image = cv.imread(path + channel_filename)[0:7500,0:2550]
+        #self.channel_image = cv.resize(cv.imread(path + channel_filename), (15000,5250), interpolation = cv.INTER_CUBIC)
 
 
     # crop individual tile images
