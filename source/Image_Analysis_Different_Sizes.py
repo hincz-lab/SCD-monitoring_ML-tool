@@ -47,8 +47,6 @@ class CountAdheredBloodCells:
             self.horizontal_Chunks = int(np.floor(1*self.channel_Width/150)) - 1
             self.new_Width = self.horizontal_Chunks*150
             self.channel_image = cv.resize(cv.imread(path + channel_filename), (self.new_Width,self.channel_Height), interpolation = cv.INTER_CUBIC)
-        else:
-            continue
           
 
     # crop individual tile images
